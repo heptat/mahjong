@@ -67,7 +67,7 @@ class TestHand < Test::Unit::TestCase
 
 
 
-  def test_hand_tabled_score
+  def test_hand_tabled_score_for_player_1
     # really, a hand will be created by drawing one tile at a time and
     # redrawing until hand.size = 13 (or 14 for player 1), this logic will be
     # else where
@@ -79,6 +79,8 @@ class TestHand < Test::Unit::TestCase
       Tile.new('north', true),
       Tile.new('north', true),
       Tile.new('two dot', false),
+      Tile.new('white board', true),
+      Tile.new('white board', true),
       Tile.new('white board', true),
       ])
 
@@ -94,6 +96,51 @@ class TestHand < Test::Unit::TestCase
       hand.table('north')
       hand.table('north')
       hand.table('north')
+
+      assert_equal 2, hand.tabled_score
+
+      hand.table('white board')
+      hand.table('white board')
+      hand.table('white board')
+
+      assert_equal 3, hand.tabled_score
+  end
+
+  def test_hand_tabled_score_for_player_2
+    # really, a hand will be created by drawing one tile at a time and
+    # redrawing until hand.size = 13 (or 14 for player 1), this logic will be
+    # else where
+    hand = Hand.new(2, [
+      Tile.new('one dot', false),
+      Tile.new('one dot', false),
+      Tile.new('one dot', false),
+      Tile.new('north', true),
+      Tile.new('north', true),
+      Tile.new('north', true),
+      Tile.new('two dot', false),
+      Tile.new('white board', true),
+      Tile.new('white board', true),
+      Tile.new('white board', true),
+      ])
+
+      assert_equal 0, hand.tabled_score
+
+      # no score...yet...dots don't count for a score until gaming
+      hand.table('one dot')
+      hand.table('one dot')
+      hand.table('one dot')
+
+      assert_equal 0, hand.tabled_score
+
+      hand.table('north')
+      hand.table('north')
+      hand.table('north')
+
+      assert_equal 1, hand.tabled_score
+
+      hand.table('white board')
+      hand.table('white board')
+      hand.table('white board')
 
       assert_equal 2, hand.tabled_score
   end

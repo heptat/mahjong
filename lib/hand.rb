@@ -40,17 +40,15 @@ class Hand
     end
   end
 
-  # TODO now I think that tabled tiles should be stored as an array of
-  # (matching) tile sets
   def tabled_score
     score = 0
-    # sort the array but it's probably already in order considering how the
-    # tiles are put int
-    @tabled.each do |tile|
-      if tile.table_score?
-        score = 1
-      end
-    end
+    # get counts of the tiles
+    tiles = @tabled.inject(Hash.new(0)) { |hash, tile| hash[tile.face] += 1; hash }
+
+    # shouldn't be less than 3 because you can't table that, but can also be 4
+    score += (@player == 1 ? 2 : 1) if tiles['north'] >= 3
+    score += 1 if tiles['white board'] >= 3
+
     score
   end
 
